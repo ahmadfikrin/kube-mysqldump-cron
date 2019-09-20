@@ -7,13 +7,6 @@ DB_HOST=${DB_HOST:-${MYSQL_ENV_DB_HOST}}
 ALL_DATABASES=${ALL_DATABASES}
 IGNORE_DATABASE=${IGNORE_DATABASE}
 
-TZ=Asia/Jakarta;
-export TZ;
-date;
-
-current_time="$(TZ=Asia/Jakarta date +%Y%m%d_%H%M%S)"
-echo "Current Time : $current_time"
-
 if [[ ${DB_USER} == "" ]]; then
 	echo "Missing DB_USER env variable"
 	exit 1
@@ -32,7 +25,7 @@ if [[ ${ALL_DATABASES} == "" ]]; then
 		echo "Missing DB_NAME env variable"
 		exit 1
 	fi
-	mysqldump --user="${DB_USER}" --password="${DB_PASS}" --host="${DB_HOST}" "$@" "${DB_NAME}" > /mysqldump/"$current_time"_"${DB_NAME}".sql
+	mysqldump --user="${DB_USER}" --password="${DB_PASS}" --host="${DB_HOST}" "$@" "${DB_NAME}" > /mysqldump/"${DB_NAME}".sql
     
 else
 	databases=`mysql --user="${DB_USER}" --password="${DB_PASS}" --host="${DB_HOST}" -e "SHOW DATABASES;" | tr -d "| " | grep -v Database`
